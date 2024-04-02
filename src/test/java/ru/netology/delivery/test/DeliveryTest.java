@@ -1,31 +1,42 @@
 package ru.netology.delivery.test;
 
 
-        import com.codeborne.selenide.Condition;
-        import com.codeborne.selenide.logevents.SelenideLogger;
-        import io.qameta.allure.selenide.AllureSelenide;
-        import org.junit.jupiter.api.*;
-        import org.openqa.selenium.Keys;
-        import ru.netology.patterns.data.DataGenerator;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.Keys;
+import ru.netology.patterns.data.DataGenerator;
 
-        import java.time.Duration;
+import java.time.Duration;
 
-        import static com.codeborne.selenide.Condition.*;
-        import static com.codeborne.selenide.Selectors.byText;
-        import static com.codeborne.selenide.Selenide.$;
-        import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
-        public class DeliveryTest {
+public class DeliveryTest {
 
-        @BeforeEach
-        void setup() {
-                open("http://localhost:9999");
-        }
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
 
 
-        @Test
-        @DisplayName("Should sucessful plan meeting")
-        void shouldChangeDate() {
+    @BeforeEach
+    void setup() {
+        open("http://localhost:9999");
+    }
+
+
+    @Test
+    @DisplayName("Should sucessful plan meeting")
+    void shouldChangeDate() {
         DataGenerator.UserInfo validUser = DataGenerator.Registration.generateUser("ru");
         int daysToAddForFirstMeeting = 4;
         String firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
@@ -48,7 +59,7 @@ package ru.netology.delivery.test;
                 .shouldBe(visible);
         $("[data-test-id='replan-notification'] button").click();
         $("[data-test-id='success-notification'] .notification__content")
-        .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
+                .shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate))
                 .shouldBe(visible);
-        }
-        }
+    }
+}
